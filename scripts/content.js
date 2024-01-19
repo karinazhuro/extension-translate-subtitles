@@ -1,76 +1,82 @@
 'use strict';
 
+
 function onClickPlayButton() {
-		const player = document.getElementById('oframecdnplayer');
-		const buttonPlayer = getPjsdiv(player)[79];
+  const player = document.getElementById('oframecdnplayer');
+  const buttonPlayer = getPjsdiv(player)[79];
 
-		const itemsForPlay = [player, buttonPlayer];
+  const itemsForPlay = [player, buttonPlayer];
 
-		itemsForPlay.forEach((item) => item.addEventListener('click', () => {
-				getPlayerControlTimelinePassed();
-		}));
+  itemsForPlay.forEach((item) => item.addEventListener('click', () => {
+    getPlayerControlTimelinePassed(player);
+  }));
 }
 
-function getPlayerControlTimelinePassed() {
-		const playerControlTimelinePassed = getPjsdiv(player)[23];
+function getPlayerControlTimelinePassed(player) {
+  const playerControlTimelinePassed = getPjsdiv(player)[23];
 
-		checkStyleLeft(playerControlTimelinePassed);
+  checkStyleLeft(playerControlTimelinePassed);
 }
 
 function checkStyleLeft(control) {
-		if(+control.style.width.slice(0, -2) > 0) {
-				getSubtitles();
-		}
+  if(+control.style.width.slice(0, -2) > 0) {
+    getSubtitles();
+  }
 }
 
 function getSubtitles() {
-		const components = document.getElementsByTagName('pjsdiv');
-		const containerSubtitles = components[components.length - 1];
-		// const videoPlayer = document.getElementsByTagName('video')[0];
+  const components = document.getElementsByTagName('pjsdiv');
+  const containerSubtitles = components[components.length - 1];
+  const span = containerSubtitles.querySelector('span');
+  // const videoPlayer = document.getElementsByTagName('video')[0];
 
-		containerSubtitles.classList.add('subtitles');
+  console.log(span?.textContent);
 
-		containerSubtitles.addEventListener('mouseover', () => {
-				// videoPlayer.pause();
-		});
+  containerSubtitles.classList.add('subtitles');
 
-		containerSubtitles.addEventListener('mouseout', () => {
-				// videoPlayer.play().catch(error => {
-				// 		console.error('Ошибка воспроизведения видео:', error);
-				// });
-		});
+  containerSubtitles.addEventListener('mouseover', () => {
+    // videoPlayer.pause();
+  });
 
-		console.log('getSubtitles');
+  containerSubtitles.addEventListener('mouseout', () => {
+    // videoPlayer.play().catch(error => {
+    //   console.error('Ошибка воспроизведения видео:', error);
+    // });
+  });
 
-		containerSubtitles.addEventListener('mousedown', (e) => {
-				console.log(e);
+  new MutationObserver(mutations => {
+    console.log(mutations);
 
-				containerSubtitles.style.left = '0px';
-				containerSubtitles.style.top = '85%';
-		});
+    mutations.forEach(mutation => {
+      if (mutation.type === 'characterData') {
+        console.log('Текст изменен на:', mutation.target.data);
+      }
+    });
+  });
 
-		// containerSubtitles.addEventListener('mousedown', function(e) {
-				// var offsetX = e.clientX - subtitles.getBoundingClientRect().left;
-				// var offsetY = e.clientY - subtitles.getBoundingClientRect().top;
-				//
-				// function mouseMoveHandler(e) {
-				// 		subtitles.style.left = (e.clientX - offsetX) + 'px';
-				// 		subtitles.style.top = (e.clientY - offsetY) + 'px';
-				// }
-				//
-				// function reset() {
-				// 		window.removeEventListener('mousemove', mouseMoveHandler);
-				// 		window.removeEventListener('mouseup', reset);
-				// }
-				//
-				// window.addEventListener('mousemove', mouseMoveHandler);
-				// window.addEventListener('mouseup', reset);
-		// });
+  // const config = { characterData: true, subtree: true };
+
+  // const targetNode = document.getElementById('someElement');
+  // observer.observe(span, config);
+
+  // mousedown
+  // containerSubtitles.addEventListener('mousemove', (e) => {
+  //   e.preventDefault();
+  //   console.log('dragging');
+  // }, true);
+  // containerSubtitles.addEventListener('mousedown', preventDragHandler, true);
+  // containerSubtitles.addEventListener('mousemove', preventDragHandler, true);
+  // containerSubtitles.addEventListener('mouseup', preventDragHandler, true);
 }
 
 function getPjsdiv(selector) {
-		return selector.querySelectorAll('pjsdiv');
+  return selector?.querySelectorAll('pjsdiv');
 }
 
 onClickPlayButton();
+
+// function preventDragHandler(event) {
+//   event.preventDefault();
+//   event.stopPropagation();
+// }
 
